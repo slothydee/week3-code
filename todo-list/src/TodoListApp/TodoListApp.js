@@ -8,9 +8,9 @@ class TodoListApp extends Component {
         super(props);
         this.state = {
             todos: [
-                'Buy groceries',
-                'Eat dessert (M&Ms preferrably)',
-                'Clean the living room'
+                { text: 'Buy groceries', isComplete: false },
+                { text: 'Eat dessert (M&Ms preferrably)', isComplete: false },
+                { text: 'Clean the living room', isComplete: false }
             ],
             todoItem: ''
         };
@@ -32,9 +32,44 @@ class TodoListApp extends Component {
         }
 
         this.setState({
-            todos: [...this.state.todos, item],
+            todos: [...this.state.todos, {
+                text: item,
+                isComplete: false
+            }],
             todoItem: ''
         });
+    }
+
+    onClear = () => {
+        this.setState({
+            todos: []
+        });
+    }
+
+    onCompleteHandler = (idx) => {
+        return () => {
+            const item = this.state.todos[idx];
+            const updatedItem = {
+                text: item.text,
+                isComplete: !item.isComplete
+            };
+
+            // One way to do it
+            // this.state.todos[idx] = updatedItem;
+            // this.setState({
+            //     todos: this.state.todos
+            // });
+
+            // Another, more "right" way to do it
+            const updatedTodos = [
+                ...this.state.todos.slice(0, idx),
+                updatedItem,
+                ...this.state.todos.slice(idx + 1)
+            ];
+            this.setState({
+                todos: updatedTodos
+            })
+        }
     }
 
     render() {
@@ -50,7 +85,11 @@ class TodoListApp extends Component {
                     value={this.state.todoItem}
                 />
                 <button onClick={this.onSubmit}>Add</button>
-                <TodoListItems todos={this.state.todos} />
+                <button onClick={this.onClear}>Clear</button>
+                <TodoListItems
+                    todos={this.state.todos}
+                    onComplete={this.onCompleteHandler}
+                />
             </div>
         )
     }
