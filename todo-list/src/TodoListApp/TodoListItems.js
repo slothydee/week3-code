@@ -3,12 +3,29 @@ import PropTypes from 'prop-types';
 
 class TodoListItems extends Component {
     static propTypes = {
-        todos: PropTypes.arrayOf(PropTypes.string).isRequired
+        todos: PropTypes.arrayOf(
+            PropTypes.shape({
+                text:PropTypes.string, 
+                isComplete: PropTypes.boolean
+        })
+        ).isRequired
+        , onComplete: PropTypes.func.isRequired
     }
 
     render() {
         const listItems = this.props.todos.map((todo, idx) => {
-            return <li key={idx}>{todo}</li>
+            const textDecoration = todo.isComplete? 'line-through':'initial'
+            return (
+            <li 
+                key={idx} 
+                onClick={this.props.onComplete(idx)}
+                style={{
+                    textDecoration, cursor: 'pointer'
+                }}
+            >
+                {todo.text}
+            </li>
+            )
         });
 
         return <ul>{listItems}</ul>;
