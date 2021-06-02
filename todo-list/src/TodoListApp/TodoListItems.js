@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import './TodoListItems.css';
+
 class TodoListItems extends Component {
     static propTypes = {
         todos: PropTypes.arrayOf(
